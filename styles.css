@@ -1,0 +1,207 @@
+/* ─── FocusGuard Overlay Styles ─────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+#focusguard-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'DM Sans', sans-serif !important;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: all !important;
+}
+
+#focusguard-overlay.fg-visible {
+  opacity: 1;
+}
+
+#focusguard-overlay.fg-fade-out {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+.fg-backdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(5, 5, 15, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.fg-card {
+  position: relative !important;
+  background: linear-gradient(145deg, #0f0f1a, #141428) !important;
+  border: 1px solid rgba(99, 102, 241, 0.25) !important;
+  border-radius: 24px !important;
+  padding: 48px 52px !important;
+  max-width: 480px !important;
+  width: 90% !important;
+  text-align: center !important;
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.1),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  animation: fg-card-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+@keyframes fg-card-in {
+  from { transform: translateY(30px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ─── Icon ─────────────────────────────────────────────────────────────────── */
+.fg-icon-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 20px !important;
+}
+
+.fg-icon {
+  font-size: 48px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  animation: fg-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes fg-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.fg-rings {
+  position: absolute !important;
+  inset: -8px !important;
+}
+
+.fg-rings span {
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 50% !important;
+  border: 1.5px solid rgba(99, 102, 241, 0.4) !important;
+  animation: fg-ring 2.5s ease-out infinite !important;
+}
+
+.fg-rings span:nth-child(2) { animation-delay: 0.8s !important; }
+.fg-rings span:nth-child(3) { animation-delay: 1.6s !important; }
+
+@keyframes fg-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ─── Text ─────────────────────────────────────────────────────────────────── */
+.fg-label {
+  font-family: 'Syne', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 4px !important;
+  color: #6366f1 !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+}
+
+.fg-title {
+  font-family: 'Syne', sans-serif !important;
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  color: #f1f1f8 !important;
+  margin: 0 0 14px !important;
+  line-height: 1.3 !important;
+}
+
+.fg-sub {
+  font-size: 14px !important;
+  color: #7878a0 !important;
+  margin: 0 0 28px !important;
+  line-height: 1.6 !important;
+}
+
+.fg-sub strong {
+  color: #a5a5d0 !important;
+  font-weight: 500 !important;
+}
+
+/* ─── Timer ────────────────────────────────────────────────────────────────── */
+.fg-timer-wrap {
+  margin-bottom: 28px !important;
+}
+
+.fg-timer-bar {
+  height: 3px !important;
+  background: rgba(255,255,255,0.06) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  margin-bottom: 8px !important;
+}
+
+.fg-timer-fill {
+  height: 100% !important;
+  width: 100% !important;
+  background: linear-gradient(90deg, #6366f1, #a78bfa) !important;
+  border-radius: 10px !important;
+  transition: width 1s linear !important;
+}
+
+.fg-timer-text {
+  font-size: 12px !important;
+  color: #5555780 !important;
+  color: rgba(170, 170, 200, 0.6) !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+.fg-actions {
+  display: flex !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.fg-btn {
+  flex: 1 !important;
+  padding: 14px 20px !important;
+  border-radius: 12px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: 0.2px !important;
+}
+
+.fg-btn-back {
+  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35) !important;
+}
+
+.fg-btn-back:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5) !important;
+}
+
+.fg-btn-proceed {
+  background: rgba(255,255,255,0.04) !important;
+  color: #6060808 !important;
+  color: rgba(180, 180, 210, 0.6) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.fg-btn-proceed:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: rgba(220, 220, 240, 0.8) !important;
+}
+
+/* ─── Guilt Line ───────────────────────────────────────────────────────────── */
+.fg-guilt {
+  font-size: 11px !important;
+  color: rgba(120, 120, 160, 0.45) !important;
+  margin: 0 !important;
+  font-style: italic !important;
+  letter-spacing: 0.2px !important;
+}

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FocusGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08080f;
+      --surface: #0f0f1c;
+      --surface2: #161628;
+      --border: rgba(99,102,241,0.15);
+      --accent: #6366f1;
+      --accent2: #a78bfa;
+      --text: #e8e8f5;
+      --muted: #6060848;
+      --muted: rgba(160,160,200,0.55);
+      --danger: #f87171;
+      --success: #34d399;
+    }
+
+    body {
+      width: 340px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────────── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 22px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(250,180,50,0.1);
+      border: 1px solid rgba(250,180,50,0.2);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fbbf24;
+    }
+
+    /* ── Score Ring ──────────────────────────────────────────────────────── */
+    .score-section {
+      padding: 24px 20px 18px;
+      text-align: center;
+      position: relative;
+    }
+
+    .score-ring-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 14px;
+    }
+
+    .score-ring {
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: rgba(99,102,241,0.1);
+      stroke-width: 8;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke: url(#ringGrad);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .score-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .score-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .score-grade {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .score-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── Stats Grid ──────────────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 0 16px 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .stat-name {
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Site List ───────────────────────────────────────────────────────── */
+    .section {
+      padding: 0 16px 14px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .site-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .site-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(220,220,240,0.8);
+    }
+
+    .site-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .site-time {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── Tab Bar ─────────────────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 8px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent2);
+    }
+
+    .tab-btn .tab-icon { font-size: 16px; }
+
+    /* ── Settings Panel ──────────────────────────────────────────────────── */
+    .panel {
+      display: none;
+      padding: 16px;
+      animation: panel-in 0.2s ease;
+    }
+
+    .panel.active { display: block; }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .fg-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg-input:focus {
+      border-color: var(--accent);
+    }
+
+    textarea.fg-input {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .fg-btn-save {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+
+    .fg-btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .save-confirm {
+      text-align: center;
+      font-size: 12px;
+      color: var(--success);
+      margin-top: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-confirm.show { opacity: 1; }
+
+    /* ── Blocked sites tags ──────────────────────────────────────────────── */
+    .site-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .site-tag {
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: var(--accent2);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .site-tag button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .site-tag button:hover { color: var(--danger); }
+
+    .add-site-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .add-site-row .fg-input { flex: 1; }
+
+    .fg-btn-add {
+      padding: 10px 14px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 10px;
+      color: var(--accent2);
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .fg-btn-add:hover { background: rgba(99,102,241,0.25); }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🛡️</div>
+    <div class="brand">FocusGuard</div>
+  </div>
+  <div class="streak-badge">🔥 <span id="streak-count">0</span> day streak</div>
+</div>
+
+<!-- Tab Panels -->
+<div id="panel-stats" class="panel active">
+  <!-- Score Ring -->
+  <div class="score-section">
+    <div class="score-ring-wrap">
+      <svg class="score-ring" width="120" height="120" viewBox="0 0 120 120">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg" cx="60" cy="60" r="45"/>
+        <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="45"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-num" id="score-num">—</div>
+        <div class="score-label">Score</div>
+      </div>
+    </div>
+    <div class="score-grade" id="score-grade">Loading…</div>
+    <div class="score-sub" id="score-sub">Fetching today's data</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-val" id="stat-warnings" style="color: #fbbf24">—</div>
+      <div class="stat-name">Warnings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stat-bypassed" style="color: #f87171">—</div>
+      <div class="stat-name">Bypassed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stat-time" style="color: #a78bfa">—</div>
+      <div class="stat-name">Min Lost</div>
+    </div>
+  </div>
+
+  <!-- Visited sites -->
+  <div class="section">
+    <div class="section-title">Visited Today</div>
+    <div id="site-list"></div>
+  </div>
+</div>
+
+<div id="panel-settings" class="panel">
+  <div class="input-group">
+    <label class="input-label">Custom Warning Message</label>
+    <textarea class="fg-input" id="setting-message" rows="2"></textarea>
+  </div>
+
+  <div class="input-group">
+    <label class="input-label">Blocked Sites</label>
+    <div class="site-tags" id="site-tags"></div>
+    <div class="add-site-row">
+      <input class="fg-input" id="new-site-input" placeholder="e.g. reddit.com" />
+      <button class="fg-btn-add" id="add-site-btn">+</button>
+    </div>
+  </div>
+
+  <button class="fg-btn-save" id="save-btn">Save Settings</button>
+  <div class="save-confirm" id="save-confirm">✓ Saved successfully!</div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-stats">
+    <span class="tab-icon">📊</span> Stats
+  </button>
+  <button class="tab-btn" id="tab-settings">
+    <span class="tab-icon">⚙️</span> Settings
+  </button>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

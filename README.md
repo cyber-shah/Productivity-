@@ -66,3 +66,13 @@ productivity-blocker/
 Click the 🛡️ icon in Chrome → Settings tab to:
 - Change the warning message
 - Add or remove blocked sites
+
+---
+
+## 🚀 Future Ideas
+
+- Pomodoro / focus session timer
+- Weekly stats & history
+- Export data as CSV
+- Sound alerts
+- Whitelist time windows (e.g. allow YouTube after 8pm)
